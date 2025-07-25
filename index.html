@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lucky Draw TE BCA BATAM 2025</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: url('https://uploads.onecompiler.io/43pxm6k3e/43pyw3fnr/ChatGPT%20Image%20Jul%2024,%202025,%2010_59_44%20AM.png') no-repeat center center fixed;
+      background-size: cover;
+      text-align: center;
+    }
+    .judul-utama {
+      font-size: 28px;
+      font-weight: bold;
+      color: white;
+      margin-top: 30px;
+      text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+    }
+    .container {
+      display: none;
+      justify-content: space-between;
+      padding: 20px;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .left-panel, .center-panel, .right-panel {
+      border: 2px solid #005bac;
+      border-radius: 10px;
+      background-color: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 0 10px rgba(0,0,0,0.08);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .left-panel { width: 20%; min-width: 200px; gap: 10px; }
+    .center-panel { width: 30%; min-width: 300px; align-items: center; }
+    .right-panel { width: 25%; min-width: 220px; }
+    #rewardImage {
+      max-width: 60%;
+      height: 180px;
+      object-fit: contain;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    #rollingName {
+      font-size: 36px;
+      margin: 20px 0 10px;
+      color: #0033a0;
+      animation: fadeInScale 0.2s ease-in-out infinite alternate;
+    }
+    #winnerTitle {
+      font-size: 20px;
+      font-weight: bold;
+      color: #0033a0;
+      margin-bottom: 5px;
+    }
+    @keyframes fadeInScale {
+      from { opacity: 0.6; transform: scale(1); }
+      to { opacity: 1; transform: scale(1.1); }
+    }
+    .back-button {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: transparent;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #0033a0;
+      animation: slideIn 0.5s ease-out;
+    }
+    .back-button:hover {
+      transform: scale(1.2);
+      color: #00257e;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-top: 10px;
+      background-color: #0033a0;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+    button:hover { background-color: #00257e; }
+    input[type="number"], select, input[type="file"] {
+      width: 100%;
+      padding: 8px;
+      font-size: 16px;
+    }
+    .transition-page {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: white;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      animation: fadeIn 1s ease-in-out;
+      padding: 20px;
+    }
+    .transition-page h2 { color: #0033a0; margin-bottom: 10px; }
+    canvas {
+      position: fixed;
+      pointer-events: none;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 999;
+    }
+    .grand-image {
+      width: 180px;
+      height: 180px;
+      margin: 20px;
+      animation: zoomIn 1s ease-in-out;
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes zoomIn {
+      from { transform: scale(0.5); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    #listPemenang {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      list-style: none;
+      padding: 0;
+    }
+    #listPemenang li {
+      background: #0033a0;
+      color: white;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      animation: fadeIn 0.5s ease-in;
+      white-space: nowrap;
+    }
+    #startPage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background: rgba(230, 240, 255, 0.8);
+      text-align: center;
+    }
+    #startPage h2 {
+      color: #0033a0;
+      margin-bottom: 20px;
+    }
+    #startPage input, #startPage button {
+      margin: 10px 0;
+      max-width: 300px;
+    }
+    #btnContinue:disabled {
+      background-color: #999;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <div class="judul-utama">🎉 Lucky Draw TE BCA BATAM 2025 🎉</div>
+
+  <div id="startPage">
+    <h2>Pilih File Daftar Peserta</h2>
+    <input type="file" id="uploadFile" accept=".xlsx" />
+    <button id="btnContinue" disabled>Lanjutkan</button>
+  </div>
+
+  <div class="container">
+    <div class="left-panel">
+      <label for="rewardSelect">Kategori Hadiah:</label>
+      <select id="rewardSelect">
+        <option value="Voucher">Voucher</option>
+        <option value="Air Fryer Azko">Air Fryer Azko</option>
+        <option value="Panci Elektrik">Panci Elektrik</option>
+        <option value="Panci Masak">Panci Masak</option>
+        <option value="Magicom Philips">Magicom Philips</option>
+        <option value="Stand Fan Philips">Stand Fan Philips</option>
+        <option value="Oven Mito">Oven Mito</option>
+        <option value="Hp Infinix Smart">Hp Infinix Smart</option>
+        <option value="Huawei Mate tab">Huawei Mate tab</option>
+        <option value="Kulkas LG 2 Pintu">Kulkas LG 2 Pintu</option>
+      </select>
+      <label for="jumlahPemenang">Jumlah Pemenang:</label>
+      <input type="number" id="jumlahPemenang" value="1" min="1"/>
+      <button id="saveBtn">SIMPAN PEMENANG (Excel)</button>
+    </div>
+
+    <div class="center-panel">
+      <img id="rewardImage" src="https://via.placeholder.com/300x180?text=Voucher" alt="Gambar Hadiah" />
+      <div id="winnerTitle">Pemenang Hadiah</div>
+      <h1 id="rollingName">Menunggu...</h1>
+      <button id="startBtn">MULAI ACAK</button>
+    </div>
+
+    <div class="right-panel">
+      <h3>Selamat Kepada:</h3>
+      <div id="winnerBox"></div>
+      <button onclick="document.getElementById('resultPage').style.display='flex'">Lihat Pemenang</button>
+      <button onclick="resetTampilanPemenang()">Reset Tampilan Pemenang</button>
+    </div>
+  </div>
+
+  <div class="transition-page" id="resultPage">
+    <h2 id="resultHeader"></h2>
+    <img id="grandPrizeImage" class="grand-image" src="" alt="Grand Prize" />
+    <ul id="listPemenang"></ul>
+    <button class="back-button" onclick="closeResult()">⬅️</button>
+  </div>
+
+  <canvas id="confettiCanvas"></canvas>
+  <audio id="drumSound" src="drum.mp3" preload="auto"></audio>
+  <audio id="cheerSound" src="https://assets.mixkit.co/sfx/preview/mixkit-crowd-cheering-365.wav" preload="auto"></audio>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <script>
+    let peserta = [];
+    let pemenang = [];
+    let gambarHadiah = {
+      "Voucher": "https://uploads.onecompiler.io/43pxm6k3e/43reaqrnh/voucher.png",
+      "Air Fryer Azko": "https://uploads.onecompiler.io/43pxm6k3e/43reaqrnh/airfryer.jpg",
+      "Panci Elektrik": "https://uploads.onecompiler.io/43pxm6k3e/43reaqrnh/pancielektrik.png",
+      "Panci Masak": "https://uploads.onecompiler.io/43pxm6k3e/43rdxcywj/panci-masak.jpg",
+      "Magicom Philips": "https://uploads.onecompiler.io/43pxm6k3e/43reaqrnh/magicom.webp",
+      "Stand Fan Philips": "https://uploads.onecompiler.io/43pxm6k3e/43reaqrnh/vrs_af8afb7e35ea918a6a9d0cda446beb59ac745df9.webp",
+      "Oven Mito": "https://uploads.onecompiler.io/43pxm6k3e/43reaqrnh/oven-mito.jpg",
+      "Hp Infinix Smart": "https://uploads.onecompiler.io/43pxm6k3e/43reaqrnh/hp-infinix.webp",
+      "Huawei Mate tab": "https://uploads.onecompiler.io/43pxm6k3e/43reaqrnh/huawei-tab.jpg",
+      "Kulkas LG 2 Pintu": "https://uploads.onecompiler.io/43pxm6k3e/43reaqrnh/kulkas-lg.jpg"
+    };
+
+    document.getElementById('rewardSelect').addEventListener('change', function() {
+      const selected = this.value;
+      document.getElementById('rewardImage').src = gambarHadiah[selected] || '';
+    });
+
+    document.getElementById('uploadFile').addEventListener('change', handleUpload);
+    document.getElementById('btnContinue').addEventListener('click', () => {
+      document.getElementById('startPage').style.display = 'none';
+      document.querySelector('.container').style.display = 'flex';
+    });
+    document.getElementById('startBtn').addEventListener('click', startDraw);
+    document.getElementById('saveBtn').addEventListener('click', exportExcel);
+
+    function handleUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const data = new Uint8Array(evt.target.result);
+        const workbook = XLSX.read(data, {type: 'array'});
+        const sheet = workbook.Sheets[workbook.SheetNames[0]];
+        const json = XLSX.utils.sheet_to_json(sheet, {header: 1});
+        const header = json[0];
+        const namaIndex = header.findIndex(h => h.toLowerCase().includes("nama"));
+        const cabangIndex = header.findIndex(h => h.toLowerCase().includes("cabang"));
+        if (namaIndex === -1 || cabangIndex === -1) {
+          alert("File Excel harus memiliki kolom 'Nama' dan 'Cabang'.");
+          return;
+        }
+        peserta = json.slice(1).map(row => {
+          let nama = (row[namaIndex] || "").toString().trim();
+          let cabang = (row[cabangIndex] || "").toString().trim();
+          function titleCase(str) {
+            return str.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+          }
+          let namaSingkat = titleCase(nama).split(" ").slice(0, 2).join(" ");
+          let cabangFormat = titleCase(cabang);
+          return `${namaSingkat} (${cabangFormat})`;
+        }).filter(n => n !== " ()");
+        if (peserta.length > 0) {
+          document.getElementById('btnContinue').disabled = false;
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    }
+
+    function resetTampilanPemenang() {
+      if (confirm("Yakin ingin mereset tampilan pemenang? Nama pemenang tetap tidak akan diacak lagi.")) {
+        document.getElementById('winnerBox').innerHTML = '';
+      }
+    }
+
+    function startDraw() {
+      if (peserta.length === 0) {
+        alert('Silakan upload daftar peserta terlebih dahulu.');
+        return;
+      }
+      const jumlah = parseInt(document.getElementById('jumlahPemenang').value);
+      const kategori = document.getElementById('rewardSelect').value;
+      if (!kategori) {
+        alert('Pilih kategori hadiah terlebih dahulu.');
+        return;
+      }
+      if (jumlah > peserta.length) {
+        alert('Jumlah pemenang melebihi jumlah peserta!');
+        return;
+      }
+      const imgSrc = gambarHadiah[kategori] || '';
+      document.getElementById('rewardImage').src = imgSrc;
+      document.getElementById('resultHeader').innerText = `Pemenang Hadiah ${kategori}`;
+      document.getElementById('grandPrizeImage').src = imgSrc;
+      let hasil = [];
+      let rolling = setInterval(() => {
+        const namaAcak = peserta[Math.floor(Math.random() * peserta.length)];
+        document.getElementById('rollingName').innerText = namaAcak;
+      }, 80);
+      document.getElementById('drumSound').play();
+      setTimeout(() => {
+        clearInterval(rolling);
+        document.getElementById('drumSound').pause();
+        document.getElementById('drumSound').currentTime = 0;
+        while (hasil.length < jumlah && peserta.length > 0) {
+          const index = Math.floor(Math.random() * peserta.length);
+          hasil.push(peserta[index]);
+          pemenang.push({nama: peserta[index], hadiah: kategori});
+          peserta.splice(index, 1);
+        }
+        document.getElementById('winnerBox').innerHTML = hasil.join('<br>');
+        document.getElementById('listPemenang').innerHTML = hasil.map(n => `<li>${n}</li>`).join('');
+        document.getElementById('resultPage').style.display = 'flex';
+        document.getElementById('cheerSound').play();
+        fireConfetti();
+      }, 5000);
+    }
+
+    function exportExcel() {
+      if (pemenang.length === 0) {
+        alert('Belum ada pemenang untuk disimpan.');
+        return;
+      }
+      const ws = XLSX.utils.json_to_sheet(pemenang);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Pemenang");
+      XLSX.writeFile(wb, 'Hasil_Pemenang.xlsx');
+    }
+
+    function closeResult() {
+      document.getElementById('resultPage').style.display = 'none';
+    }
+
+    function fireConfetti() {
+      const duration = 2000;
+      const end = Date.now() + duration;
+      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 999 };
+      const interval = setInterval(() => {
+        const timeLeft = end - Date.now();
+        if (timeLeft <= 0) return clearInterval(interval);
+        const count = 50 * (timeLeft / duration);
+        confetti(Object.assign({}, defaults, {
+          particleCount: count,
+          origin: { x: Math.random(), y: Math.random() - 0.2 }
+        }));
+      }, 250);
+    }
+
+    document.body.addEventListener('click', function allowAudio() {
+      document.getElementById('drumSound').play().catch(() => {});
+      document.body.removeEventListener('click', allowAudio);
+    });
+  </script>
+</body>
+</html>
